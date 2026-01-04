@@ -1,8 +1,6 @@
 # 🛡️ Guardian - High-Performance Distributed Rate Limiter
 
 [![Rust](https://img.shields.io/badge/rust-1.75%2B-orange.svg)](https://www.rust-lang.org/)
-[![License](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)](LICENSE)
-[![CI](https://img.shields.io/badge/CI-passing-brightgreen.svg)](https://github.com/yourusername/guardian)
 
 A production-ready distributed rate limiter built in Rust, designed for microsecond latency and millions of requests per second. Guardian uses a sidecar/middleware pattern to protect microservices from overload while maintaining high availability.
 
