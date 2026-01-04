@@ -217,6 +217,7 @@ mod client_example {
         let request = tonic::Request::new(CheckLimitRequest {
             client_id: "user123".to_string(),
             cost: 10,
+            override_config: None,
         });
 
         let response = client.check_limit(request).await.unwrap();
