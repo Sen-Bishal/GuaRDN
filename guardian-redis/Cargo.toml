@@ -1,0 +1,24 @@
+[package]
+name = "guardian-redis"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Redis-backed storage for Guardian rate limiter"
+keywords = ["rate-limiting", "redis", "distributed"]
+categories = ["caching", "network-programming"]
+
+[dependencies]
+guardian-core = { path = "../guardian-core" }
+tokio.workspace = true
+async-trait.workspace = true
+redis = { workspace = true, features = ["cluster-async"] }
+parking_lot.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util", "macros", "rt-multi-thread"] }
+
+[lib]
+name = "guardian_redis"
+path = "src/lib.rs"

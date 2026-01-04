@@ -1,0 +1,60 @@
+[workspace]
+resolver = "2"
+members = [
+    "guardian-core",
+    "guardian-redis",
+    "guardian-service",
+    "guardian-client",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <you@example.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/guardian"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+
+# gRPC
+tonic = "0.12"
+prost = "0.13"
+tonic-build = "0.12"
+
+# Async utilities
+async-trait = "0.1"
+async-stream = "0.3"
+
+# Concurrency
+parking_lot = "0.12"
+dashmap = "6.0"
+
+# Utilities
+uuid = { version = "1.0", features = ["v4", "serde"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+
+# Redis
+redis = { version = "0.26", features = ["tokio-comp", "connection-manager", "script", "cluster-async"] }
+
+# Configuration
+config = "0.14"
+
+# Logging & Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

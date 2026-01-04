@@ -1,0 +1,23 @@
+[package]
+name = "guardian-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Core rate limiting algorithms and abstractions"
+keywords = ["rate-limiting", "throttling", "distributed", "performance"]
+categories = ["algorithms", "concurrency", "network-programming"]
+
+[dependencies]
+tokio = { workspace = true, features = ["sync", "time"] }
+async-trait.workspace = true
+parking_lot.workspace = true
+thiserror.workspace = true
+dashmap.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util", "macros", "rt-multi-thread"] }
+
+[lib]
+name = "guardian_core"
+path = "src/lib.rs"

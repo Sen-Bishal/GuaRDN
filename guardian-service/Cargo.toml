@@ -1,0 +1,45 @@
+[package]
+name = "guardian-service"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "gRPC service for Guardian rate limiter"
+keywords = ["rate-limiting", "grpc", "microservices"]
+categories = ["network-programming", "web-programming"]
+
+[[bin]]
+name = "guardian-service"
+path = "src/main.rs"
+
+[dependencies]
+guardian-core = { path = "../guardian-core" }
+guardian-redis = { path = "../guardian-redis" }
+
+# Async & gRPC
+tokio.workspace = true
+tonic.workspace = true
+prost.workspace = true
+async-trait.workspace = true
+async-stream.workspace = true
+tokio-stream = { version = "0.1", features = ["sync"] }
+
+# Error handling
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Utilities
+uuid.workspace = true
+
+# Configuration
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+config.workspace = true
+
+# Logging
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[build-dependencies]
+tonic-build.workspace = true

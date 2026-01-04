@@ -1,0 +1,146 @@
+
+syntax = "proto3";
+
+package guardian;
+
+
+service RateLimiter {
+  // Check if a request should be allowed based on current limits
+  rpc CheckLimit(CheckLimitRequest) returns (CheckLimitResponse);
+  
+  // Get current usage statistics for a client
+  rpc GetUsage(GetUsageRequest) returns (GetUsageResponse);
+  
+  // Reset the rate limit for a specific client (admin operation)
+  rpc ResetLimit(ResetLimitRequest) returns (ResetLimitResponse);
+  
+  // Stream mode: Subscribe to limit status changes
+  rpc StreamLimitStatus(StreamLimitRequest) returns (stream LimitStatusUpdate);
+}
+
+
+message CheckLimitRequest {
+  // Unique identifier for the client (user_id, api_key, IP, etc.)
+  string client_id = 1;
+  
+  // Cost of this request in tokens (default: 1)
+  uint32 cost = 2;
+  
+  // Optional: Override global config for this check
+  optional RateLimitConfig override_config = 3;
+}
+
+message CheckLimitResponse {
+  // Whether the request is allowed
+  bool allowed = 1;
+  
+  // If denied, how long to wait before retrying (seconds)
+  uint32 retry_after_seconds = 2;
+  
+  // Remaining tokens in the bucket
+  uint64 remaining_tokens = 3;
+  
+  // Additional metadata
+  LimitMetadata metadata = 4;
+}
+
+message GetUsageRequest {
+  string client_id = 1;
+}
+
+message GetUsageResponse {
+  uint64 used_tokens = 1;
+  uint64 total_capacity = 2;
+  uint64 refill_rate = 3;
+  int64 last_refill_timestamp = 4;
+}
+
+message ResetLimitRequest {
+  string client_id = 1;
+  
+  // Optional: Admin authentication token
+  string admin_token = 2;
+}
+
+message ResetLimitResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message StreamLimitRequest {
+  string client_id = 1;
+}
+
+message LimitStatusUpdate {
+  string client_id = 1;
+  uint64 remaining_tokens = 2;
+  int64 timestamp = 3;
+  LimitStatus status = 4;
+}
+
+
+
+message RateLimitConfig {
+  // Token bucket capacity
+  uint64 capacity = 1;
+  
+  // Tokens added per refill interval
+  uint64 refill_rate = 2;
+  
+  // Refill interval in seconds
+  uint32 refill_interval_seconds = 3;
+  
+  // Algorithm type
+  Algorithm algorithm = 4;
+}
+
+enum Algorithm {
+  ALGORITHM_UNSPECIFIED = 0;
+  TOKEN_BUCKET = 1;
+  SLIDING_WINDOW_LOG = 2;
+  FIXED_WINDOW = 3;
+  SLIDING_WINDOW_COUNTER = 4;
+}
+
+enum LimitStatus {
+  LIMIT_STATUS_UNSPECIFIED = 0;
+  HEALTHY = 1;
+  THROTTLED = 2;
+  EXHAUSTED = 3;
+}
+
+message LimitMetadata {
+  // Which node handled this request
+  string node_id = 1;
+  
+  // Whether this was served from cache
+  bool from_cache = 2;
+  
+  // Processing latency in microseconds
+  uint64 latency_us = 3;
+  
+  // Global limit vs local limit
+  bool is_global = 4;
+}
+
+
+
+message GetClusterStatsRequest {
+  // Empty for now
+}
+
+message GetClusterStatsResponse {
+  repeated NodeStats nodes = 1;
+  uint64 total_requests = 2;
+  uint64 total_denials = 3;
+  double denial_rate = 4;
+}
+
+message NodeStats {
+  string node_id = 1;
+  uint64 requests_handled = 2;
+  uint64 denials = 3;
+  uint64 cache_hits = 4;
+  uint64 cache_misses = 5;
+  int64 uptime_seconds = 6;
+}
